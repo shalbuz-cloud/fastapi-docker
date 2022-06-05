@@ -1,0 +1,28 @@
+# git
+.git/
+
+# pycharm
+.idea/
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.pyc
+*.pyc
+
+# vscode
+.DS_Store
+
+# venv
+venv/
+env/
+
+#
+dist/
+db.sqlite3
+
+# logs
+*.log
+logs/
+
+# fastapi
+app_example.egg-info
