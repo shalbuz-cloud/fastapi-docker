@@ -11,12 +11,12 @@ router = APIRouter()
 
 
 @router.get('/')
-def index():
+async def index():
     return {'status': 'OK'}
 
 
 @router.post('/login', name='user:login')
-def login(user_form: UserLoginForm = Body(..., embed=True), database=Depends(connect_db)):
+async def login(user_form: UserLoginForm = Body(..., embed=True), database=Depends(connect_db)):
     user = database.query(User).filter(User.email == user_form.email).one_or_none()
     if not user or get_password_hash(user_form.password) != user.password:
         return {'error': 'Email/password invalid'}
@@ -27,7 +27,7 @@ def login(user_form: UserLoginForm = Body(..., embed=True), database=Depends(con
 
 
 @router.post('/user', name='user:create')
-def create_user(user: UserCreateForm = Body(..., embed=True), database=Depends(connect_db)):
+async def create_user(user: UserCreateForm = Body(..., embed=True), database=Depends(connect_db)):
     exists_user = database.query(User.id).filter(User.email == user.email).one_or_none()
     if exists_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Email already exists')
@@ -45,6 +45,6 @@ def create_user(user: UserCreateForm = Body(..., embed=True), database=Depends(c
 
 
 @router.get('/user', name='user:get')
-def get_user(token: AuthToken = Depends(check_auth_token), database=Depends(connect_db)):
+async def get_user(token: AuthToken = Depends(check_auth_token), database=Depends(connect_db)):
     user = database.query(User).filter(User.id == token.user_id).one_or_none()
     return {'id': user.id, 'email': user.email, 'nickname': user.nickname}
